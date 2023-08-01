@@ -1,0 +1,79 @@
+# IC-GVINS
+
+# Output directory
+outputpath: "/home/vdcl/Documents/gvins_output"
+is_make_outputdir: false
+
+# Time length for GNSS/INS intialization, sec
+initlength: 1
+
+# IMU sample rate, hz
+imudatarate: 100
+
+# Consider the Earth rotation
+iswithearth: true
+
+# GNSS lever-arm in IMU body frame (front-right-down) meter
+antlever: [0.07, 0.0, -0.23] #vrs gps 
+#antlever: [-0.25, 0.0, 0.0] #ublox gps
+
+# IMU noise parameters (mti-300)
+imumodel:
+    arw: 0.6        # deg/sqrt(hr)
+    vrw: 0.03528        # m/s/sqrt(hr)
+    gbstd: 10.0     # deg/hr
+    abstd: 14.709     # mGal
+    corrtime: 1.0   # hr
+
+# GNSS outage configurations, the GNSS will not be used after the gnssoutagetime 
+isusegnssoutage: false
+gnssoutagetime: 0
+gnssthreshold: 10
+
+# A fixed threshold (STD, m) for GNSS outlier culling
+#gnssthreshold: 1
+
+# Use visualization
+is_use_visualization: true
+
+# Tracking configurations
+track_check_histogram: false    # (Check histogram for drastic illumulation change)
+track_min_parallax: 10          # (The minmum parallax in pixels to choose a keyframe)
+track_max_interval: 1.0         # (The maximum length to choose a observation frame) sec
+track_max_features: 200         # (The maximum features to detect, may be more or less, see tracking.cc)
+
+# Optimization configurations
+reprojection_error_std: 1.5         # (The reprojection error std for optimizition and outlier culling)
+optimize_windows_size: 20           # (The size of the sliding window, number of the keyframes )
+optimize_num_iterations: 20         # (The iterations in total)
+optimize_estimate_extrinsic: false   # (Estimate the extrinsic)
+optimize_estimate_td: false          # (Estimate the time delay)
+
+# Camera parameters
+cam0:
+    # Intrinsic parameters, pinhole model fx, fy, cx, cy
+    intrinsic: [816.40221, 817.38388, 608.82658, 266.68865]
+
+    # Distortion parameters k1, k2, p1, p2
+    distortion: [-0.050040485, 0.1200121717, -0.0011825064, -0.063505208]
+    #distortion: [-0.0, 0.0, -0.0, -0.0]
+
+    # Resolution
+    resolution: [1280, 560]
+
+    # (Camera-IMU extrinsic)
+    # Pb = q_b_c * Pc + t_b_c
+    # q (x, y, z, w)
+    q_b_c: [0.4945, 0.4978, 0.5056, 0.5020] 
+    #google trans vehicle to cam: -0.6377296, 0.0000926, -0.6343044, 0.4369884
+    #matlab trans vehicle to cam : -0.5020, 0.5056, -0.4978, 0.4945
+    #matlab trans imu to cam : -0.4978, 0.5056, -0.5020, 0.4945
+    #matlab euler imu(front right down) to cam : 89.1220 -0.0132 90.3899
+    #matlab quat imu(front right down) to cam : 0.4945 0.4978 0.5056 0.5020
+    t_b_c: [1.71239, -0.247401, 0.12589]
+    #vehicle to cam : 1.64239 0.247401 1.58411
+    #vehicle to imu : -0.07 0 1.7
+
+    # (The time delay between the IMU and camera)
+    # t_i = t_c + td
+    td_b_c: 0.0
